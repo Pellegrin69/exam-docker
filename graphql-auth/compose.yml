@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb
+    container_name: my_db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MARIADB_DATABASE: ${DATABASE_NAME}
+    ports:
+      - 5432:3306
+
+  app:
+    build:
+      context: .
+      dockerfile: ./DockerfileDev
+    container_name: my_app
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.pnpm-store
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - 3000:3000
